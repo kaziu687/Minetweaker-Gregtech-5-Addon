@@ -5,11 +5,16 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import static gregtech.api.enums.GT_Values.MOD_ID;
 import static gregtech.api.enums.GT_Values.RA;
+
+import gregtech.api.util.GT_Recipe;
+import gregtech.jei.JEIGregtechRecipe;
 
 /**
  * Provides access to the Forge Hammer recipes.
@@ -32,7 +37,11 @@ public class ForgeHammer {
         MineTweakerAPI.apply(new AddMultipleRecipeAction("Adding forge hammer recipe for " + output, input, output, durationTicks, euPerTick) {
             @Override
             protected void applySingleRecipe(ArgIterator i) {
-                RA.addForgeHammerRecipe(i.nextItem(), i.nextItem(), i.nextInt(), i.nextInt());
+            	ItemStack input1 = i.nextItem();
+                RA.addForgeHammerRecipe(input1, i.nextItem(), i.nextInt(), i.nextInt());            	
+                GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sHammerRecipes.findRecipe(null, null, false, Long.MAX_VALUE,null, null, new ItemStack[]{input1});
+                if(tRecipe!=null&&!tRecipe.mHidden)
+                MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sHammerRecipes, tRecipe));
             }
         });
     }

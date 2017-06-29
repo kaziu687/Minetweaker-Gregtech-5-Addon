@@ -5,11 +5,16 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import static gregtech.api.enums.GT_Values.MOD_ID;
 import static gregtech.api.enums.GT_Values.RA;
+
+import gregtech.api.util.GT_Recipe;
+import gregtech.jei.JEIGregtechRecipe;
 
 /**
  * Provides access to the Fluid Heater recipes.
@@ -33,7 +38,12 @@ public class FluidHeater {
         MineTweakerAPI.apply(new AddMultipleRecipeAction("Adding Fluid Heater recipe for " + fluidOutput, circuit, fluidInput, fluidOutput, durationTicks, euPerTick) {
             @Override
             protected void applySingleRecipe(ArgIterator i) {
-                RA.addFluidHeaterRecipe(i.nextItem(), i.nextFluid(), i.nextFluid(), i.nextInt(), i.nextInt());
+            	ItemStack input1 = i.nextItem();
+            	FluidStack input3 = i.nextFluid();
+                RA.addFluidHeaterRecipe(input1, input3, i.nextFluid(), i.nextInt(), i.nextInt());      	
+                GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sFluidHeaterRecipes.findRecipe(null, null, false, Long.MAX_VALUE, new FluidStack[]{input3}, null, new ItemStack[]{input1});
+                if(tRecipe!=null&&!tRecipe.mHidden)
+                MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sFluidHeaterRecipes, tRecipe));
             }
         });
     }

@@ -5,11 +5,17 @@ import minetweaker.OneWayAction;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import static gregtech.api.enums.GT_Values.MOD_ID;
 import static gregtech.api.enums.GT_Values.RA;
+
+import gregtech.api.GregTech_API;
+import gregtech.api.util.GT_Recipe;
+import gregtech.jei.JEIGregtechRecipe;
 
 /**
  * Provides access to the fuels used by the various generators.
@@ -130,6 +136,40 @@ public class Fuels {
                     MineTweakerMC.getItemStack(output),
                     euPerMillibucket,
                     type);
+            GT_Recipe tRecipe;
+           	switch(type){
+           	case 0://Diesel Gen
+           		tRecipe = GT_Recipe.GT_Recipe_Map.sDieselFuels.findRecipe(null, null, false, Long.MAX_VALUE, null, null, new ItemStack[]{MineTweakerMC.getItemStack(input)});           		
+           		if(tRecipe!=null&&!tRecipe.mHidden)
+           			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sDieselFuels, tRecipe));
+           		break;
+           	case 1://Gas Turbine
+           		tRecipe = GT_Recipe.GT_Recipe_Map.sTurbineFuels.findRecipe(null, null, false, Long.MAX_VALUE, null, null, new ItemStack[]{MineTweakerMC.getItemStack(input)});           		
+           		if(tRecipe!=null&&!tRecipe.mHidden)
+           			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sTurbineFuels, tRecipe));
+           		break;
+           	case 2://Thermal Gen
+           		tRecipe = GT_Recipe.GT_Recipe_Map.sHotFuels.findRecipe(null, null, false, Long.MAX_VALUE, null, null, new ItemStack[]{MineTweakerMC.getItemStack(input)});           		
+           		if(tRecipe!=null&&!tRecipe.mHidden)
+           			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sHotFuels, tRecipe));
+           		break;
+           	case 4://Plasma Gen
+           		tRecipe = GT_Recipe.GT_Recipe_Map.sPlasmaFuels.findRecipe(null, null, false, Long.MAX_VALUE, null, null, new ItemStack[]{MineTweakerMC.getItemStack(input)});           		
+           		if(tRecipe!=null&&!tRecipe.mHidden)
+           			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sPlasmaFuels, tRecipe));
+           		break;
+           	case 5://Magic Gen
+           		tRecipe = GT_Recipe.GT_Recipe_Map.sMagicFuels.findRecipe(null, null, false, Long.MAX_VALUE, null, null, new ItemStack[]{MineTweakerMC.getItemStack(input)});           		
+           		if(tRecipe!=null&&!tRecipe.mHidden)
+           			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sMagicFuels, tRecipe));
+           		break;
+           	default://Semifluid Gen
+           		tRecipe = GT_Recipe.GT_Recipe_Map.sDenseLiquidFuels.findRecipe(null, null, false, Long.MAX_VALUE, null, null, new ItemStack[]{MineTweakerMC.getItemStack(input)});           		
+           		if(tRecipe!=null&&!tRecipe.mHidden)
+           			MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sDenseLiquidFuels, tRecipe));
+           		break;
+           	}
+            
         }
 
         @Override
