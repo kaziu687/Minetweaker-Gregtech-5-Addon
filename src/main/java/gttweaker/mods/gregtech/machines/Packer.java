@@ -5,11 +5,16 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import static gregtech.api.enums.GT_Values.MOD_ID;
 import static gregtech.api.enums.GT_Values.RA;
+
+import gregtech.api.util.GT_Recipe;
+import gregtech.jei.JEIGregtechRecipe;
 
 /**
  * Provides access to the Packer recipes.
@@ -33,7 +38,12 @@ public class Packer {
         MineTweakerAPI.apply(new AddMultipleRecipeAction("Adding Packer recipe for " + output, input1, input2, output, durationTicks, euPerTick) {
             @Override
             protected void applySingleRecipe(ArgIterator i) {
-                RA.addBoxingRecipe(i.nextItem(), i.nextItem(), i.nextItem(), i.nextInt(), i.nextInt());
+            	ItemStack input1 = i.nextItem();
+            	ItemStack input2 = i.nextItem();        	
+                RA.addBoxingRecipe(input1, input2, i.nextItem(), i.nextInt(), i.nextInt());
+                GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sBoxinatorRecipes.findRecipe(null, null, false, Long.MAX_VALUE, null, null, new ItemStack[]{input1,input2});
+                if(tRecipe!=null&&!tRecipe.mHidden)
+                MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sBoxinatorRecipes, tRecipe));
             }
         });
     }

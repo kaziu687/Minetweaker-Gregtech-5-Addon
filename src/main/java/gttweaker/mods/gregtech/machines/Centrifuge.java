@@ -6,12 +6,17 @@ import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import static gregtech.api.enums.GT_Values.MOD_ID;
 import static gregtech.api.enums.GT_Values.RA;
 import static gttweaker.util.ArrayHelper.itemOrNull;
+
+import gregtech.api.util.GT_Recipe;
+import gregtech.jei.JEIGregtechRecipe;
 
 /**
  * Provides access to the Centrifuge recipes.
@@ -44,8 +49,14 @@ public class Centrifuge {
                     itemOrNull(outputs, 1), itemOrNull(outputs, 2), itemOrNull(outputs, 3), itemOrNull(outputs, 4), itemOrNull(outputs, 5), chances, durationTicks, euPerTick) {
                 @Override
                 protected void applySingleRecipe(ArgIterator i) {
-                    RA.addCentrifugeRecipe(i.nextItem(), i.nextItem(), i.nextFluid(), i.nextFluid(), i.nextItem(), i.nextItem(),
+                	ItemStack input1 = i.nextItem();
+                	ItemStack input2 = i.nextItem();
+                	FluidStack input3 = i.nextFluid();
+                    RA.addCentrifugeRecipe(input1, input2, input3, i.nextFluid(), i.nextItem(), i.nextItem(),
                             i.nextItem(), i.nextItem(), i.nextItem(), i.nextItem(), i.nextIntArr(), i.nextInt(), i.nextInt());
+                    GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sCentrifugeRecipes.findRecipe(null, null, false, Long.MAX_VALUE, new FluidStack[]{input3}, null, new ItemStack[]{input1,input2});
+                    if(tRecipe!=null)
+                    MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sCentrifugeRecipes, tRecipe));
                 }
             });
         }
@@ -65,8 +76,12 @@ public class Centrifuge {
                     itemOrNull(outputs, 1), itemOrNull(outputs, 2), itemOrNull(outputs, 3), itemOrNull(outputs, 4), itemOrNull(outputs, 5), durationTicks) {
                 @Override
                 protected void applySingleRecipe(ArgIterator i) {
-                    RA.addCentrifugeRecipe(i.nextItem(), i.nextInt(), i.nextItem(), i.nextItem(),
-                            i.nextItem(), i.nextItem(), i.nextItem(), i.nextItem(), i.nextInt());
+                	ItemStack input1 = i.nextItem();
+                    RA.addCentrifugeRecipe(input1, i.nextInt(), i.nextItem(), i.nextItem(),
+                            i.nextItem(), i.nextItem(), i.nextItem(), i.nextItem(), i.nextInt());          	
+                    GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sCentrifugeRecipes.findRecipe(null, null, false, Long.MAX_VALUE, null, null, new ItemStack[]{input1});
+                    if(tRecipe!=null)
+                    MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sCentrifugeRecipes, tRecipe));
                 }
             });
         }

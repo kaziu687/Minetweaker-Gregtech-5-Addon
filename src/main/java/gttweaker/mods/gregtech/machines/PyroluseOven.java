@@ -6,11 +6,16 @@ import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import minetweaker.api.minecraft.MineTweakerMC;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import static gregtech.api.enums.GT_Values.MOD_ID;
 import static gregtech.api.enums.GT_Values.RA;
+
+import gregtech.api.util.GT_Recipe;
+import gregtech.jei.JEIGregtechRecipe;
 
 /**
  * Provides access to the PyroluseOven recipes.
@@ -69,7 +74,10 @@ public class PyroluseOven {
                     MineTweakerMC.getItemStack(output),
                     MineTweakerMC.getLiquidStack(fluidOutput),
                     duration,
-                    euPerTick);
+                    euPerTick);          	
+            GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sPyrolyseRecipes.findRecipe(null, null, false, Long.MAX_VALUE, new FluidStack[]{MineTweakerMC.getLiquidStack(fluidInput)}, null, new ItemStack[]{MineTweakerMC.getItemStack(input)});
+            if(tRecipe!=null&&!tRecipe.mHidden)
+            MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sPyrolyseRecipes, tRecipe));
         }
 
         @Override

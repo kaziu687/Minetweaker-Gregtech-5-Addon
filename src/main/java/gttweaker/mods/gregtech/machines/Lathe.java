@@ -5,12 +5,17 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import static gregtech.api.enums.GT_Values.MOD_ID;
 import static gregtech.api.enums.GT_Values.RA;
 import static gttweaker.util.ArrayHelper.itemOrNull;
+
+import gregtech.api.util.GT_Recipe;
+import gregtech.jei.JEIGregtechRecipe;
 
 /**
  * Access point for Lathe recipes.
@@ -49,7 +54,11 @@ public class Lathe {
             MineTweakerAPI.apply(new AddMultipleRecipeAction("Adding lathe recipe for " + outputs[0], input, outputs[0], itemOrNull(outputs, 1), durationTicks, euPerTick) {
                 @Override
                 protected void applySingleRecipe(ArgIterator i) {
-                    RA.addLatheRecipe(i.nextItem(), i.nextItem(), i.nextItem(), i.nextInt(), i.nextInt());
+                	ItemStack input1 = i.nextItem();
+                    RA.addLatheRecipe(input1, i.nextItem(), i.nextItem(), i.nextInt(), i.nextInt());           	
+                    GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sLatheRecipes.findRecipe(null, null, false, Long.MAX_VALUE, null, null, new ItemStack[]{input1});
+                    if(tRecipe!=null&&!tRecipe.mHidden)
+                    MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sLatheRecipes, tRecipe));
                 }
             });
         }

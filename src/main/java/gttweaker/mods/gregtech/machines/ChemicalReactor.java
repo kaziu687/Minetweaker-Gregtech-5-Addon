@@ -6,11 +6,16 @@ import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import static gregtech.api.enums.GT_Values.MOD_ID;
 import static gregtech.api.enums.GT_Values.RA;
+
+import gregtech.api.util.GT_Recipe;
+import gregtech.jei.JEIGregtechRecipe;
 
 /**
  * Provides access to the Chemical Reactor recipes.
@@ -35,7 +40,13 @@ public class ChemicalReactor {
         MineTweakerAPI.apply(new AddMultipleRecipeAction("Adding Chemical Reactor recipe for " + output, input1, input2, fluidInput, fluidOutput, output, durationTicks) {
             @Override
             protected void applySingleRecipe(ArgIterator i) {
-                RA.addChemicalRecipe(i.nextItem(), i.nextItem(), i.nextFluid(), i.nextFluid(), i.nextItem(), i.nextInt());
+            	ItemStack input1 = i.nextItem();
+            	ItemStack input2 = i.nextItem();
+            	FluidStack input3 = i.nextFluid();
+                RA.addChemicalRecipe(input1, input2, input3, i.nextFluid(), i.nextItem(), i.nextInt());      	
+                GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sChemicalRecipes.findRecipe(null, null, false, Long.MAX_VALUE, new FluidStack[]{input3}, null, new ItemStack[]{input1,input2});
+                if(tRecipe!=null)
+                MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sChemicalRecipes, tRecipe));
             }
         });
     }

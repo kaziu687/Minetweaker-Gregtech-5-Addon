@@ -6,11 +6,16 @@ import minetweaker.annotations.ModOnly;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import static gregtech.api.enums.GT_Values.MOD_ID;
 import static gregtech.api.enums.GT_Values.RA;
+
+import gregtech.api.util.GT_Recipe;
+import gregtech.jei.JEIGregtechRecipe;
 
 /**
  * Provides access to the Plasma Arc Furnace recipes.
@@ -41,7 +46,12 @@ public class PlasmaArcFurnace {
             MineTweakerAPI.apply(new AddMultipleRecipeAction("Adding Plasma Arc Furnace recipe for " + input, input, fluidInput, outputs, fluidOutput, outChances, durationTicks, euPerTick) {
                 @Override
                 protected void applySingleRecipe(ArgIterator i) {
-                    RA.addPlasmaArcFurnaceRecipe(i.nextItem(), i.nextFluid(), i.nextItemArr(), i.nextFluid(), i.nextIntArr(), i.nextInt(), i.nextInt());
+                	ItemStack input1 = i.nextItem();
+                	FluidStack input3 = i.nextFluid();         	
+                    RA.addPlasmaArcFurnaceRecipe(input1, input3, i.nextItemArr(), i.nextFluid(), i.nextIntArr(), i.nextInt(), i.nextInt());
+                    GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sPlasmaArcFurnaceRecipes.findRecipe(null, null, false, Long.MAX_VALUE, new FluidStack[]{input3}, null, new ItemStack[]{input1});
+                    if(tRecipe!=null&&!tRecipe.mHidden)
+                    MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(new JEIGregtechRecipe(GT_Recipe.GT_Recipe_Map.sPlasmaArcFurnaceRecipes, tRecipe));
                 }
             });
         }
